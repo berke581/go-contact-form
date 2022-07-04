@@ -2,7 +2,7 @@ package main
 
 import (
 	"log"
-	"os"
+	// "os"
 
 	"github.com/joho/godotenv"
 
@@ -12,7 +12,7 @@ import (
 func init() {
 	if err := godotenv.Load(); err != nil {
 		log.Fatalln(".env file not found.")
-		os.Exit(-1)
+		// os.Exit(-1)
 	}
 }
 

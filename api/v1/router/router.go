@@ -45,6 +45,9 @@ func ServeRouter() {
 	r := initialize()
 
 	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8081" // Default port if not specified
+	}
 	err := http.ListenAndServe(fmt.Sprintf(":%s", port), r)
 	if err != nil {
 		log.Fatalln("Error serving router: ", err.Error())

@@ -44,7 +44,7 @@ func formatMessage(to string, name string, title string, email string, body stri
 	if len(name) > 0 {
 		from += fmt.Sprintf("%s ", name)
 	}
-	from += "email"
+	from += fmt.Sprintf("<%s>", email)
 
 	return []byte(fmt.Sprintf("From: %s\r\n", from) +
 		fmt.Sprintf("To: %s\r\n", to) +

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/smtp"
+	"os"
 )
 
 type emailSender struct {
@@ -18,23 +19,36 @@ func NewEmailSender(from string, password string) *emailSender {
 	}
 }
 
-var smtpHost = "smtp.gmail.com"
-var smtpPort = "587"
-
-func (emailSender *emailSender) SendEmail(to string, title string, msg string) {
+func (emailSender *emailSender) SendEmail(to string, name string, title string, email string, body string) {
 	from := emailSender.from
-	pw := emailSender.password
+	password := emailSender.password
 
-	toArray := []string{to}
-	message := []byte(
-		fmt.Sprintf("Subject: %s\r\n\r\n", title) +
-			fmt.Sprintf("%s\r\n", msg))
-	auth := smtp.PlainAuth("", from, pw, smtpHost)
+	smtpHost := os.Getenv("SMTP_HOST")
+	smtpPort := os.Getenv("SMTP_PORT")
 
-	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, from, toArray, message)
+	toList := []string{to}
+	message := formatMessage(to, name, title, email, body)
+
+	auth := smtp.PlainAuth("", from, password, smtpHost)
+
+	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, from, toList, message)
 	if err != nil {
 		log.Fatalln("Error sending mail: ", err)
 	}
 
 	log.Println("Email sent succesfully.")
+}
+
+func formatMessage(to string, name string, title string, email string, body string) []byte {
+	var from string = ""
+	if len(name) > 0 {
+		from += fmt.Sprintf("%s ", name)
+	}
+	from += "email"
+
+	return []byte(fmt.Sprintf("From: %s\r\n", from) +
+		fmt.Sprintf("To: %s\r\n", to) +
+		fmt.Sprintf("Subject: %s\r\n", title) +
+		"\r\n" +
+		fmt.Sprintf("%s\r\n", body))
 }

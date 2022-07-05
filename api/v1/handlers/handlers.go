@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"os"
 
@@ -30,19 +29,12 @@ func contactHandler(rw http.ResponseWriter, r *http.Request) {
 	data := &FormData{}
 	json.NewDecoder(r.Body).Decode(data)
 
-	userEmail := os.Getenv("USER_EMAIL")
-	userPw := os.Getenv("USER_PASSWORD")
-	recipientEmail := os.Getenv("RECIPIENT_EMAIL")
+	senderEmail := os.Getenv("SENDER_EMAIL")
+	senderPassword := os.Getenv("SENDER_PASSWORD")
+	receiverEmail := os.Getenv("RECEIVER_EMAIL")
 
-	sender := email.NewEmailSender(userEmail, userPw)
-	var formattedName string
-	if len(data.Name) > 0 {
-		formattedName = data.Name
-	} else {
-		formattedName = "--"
-	}
-	formattedBody := fmt.Sprintf("Name: %s, Email: %s\n\n%s", formattedName, data.Email, data.Body)
-	sender.SendEmail(recipientEmail, data.Title, formattedBody)
+	sender := email.NewEmailSender(senderEmail, senderPassword)
+	sender.SendEmail(receiverEmail, data.Name, data.Title, data.Email, data.Body)
 
 	rw.Header().Set("Content-Type", "application/json")
 	rw.WriteHeader(http.StatusOK)

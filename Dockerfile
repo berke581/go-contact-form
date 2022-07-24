@@ -1,6 +1,6 @@
 FROM golang:1.18.4-alpine3.16
 
-LABEL maintainer="Berke <berke5sekiz1@gmail.com>"
+LABEL maintainer="Berke Yoncaci <berke5sekiz1@gmail.com>"
 
 WORKDIR /app
 

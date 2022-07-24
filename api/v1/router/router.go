@@ -15,6 +15,13 @@ import (
 	"github.com/berke581/go-contact-form/api/v1/handlers"
 )
 
+func jsonMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+		rw.Header().Add("Content-Type", "application/json")
+		next.ServeHTTP(rw, r)
+	})
+}
+
 func initialize() *chi.Mux {
 	router := chi.NewRouter()
 
@@ -22,6 +29,7 @@ func initialize() *chi.Mux {
 		render.SetContentType(render.ContentTypeJSON),
 		middleware.RedirectSlashes,
 		middleware.Recoverer,
+		jsonMiddleware,
 		cors.Handler(cors.Options{
 			AllowedOrigins:   []string{"https://*", "http://*"},
 			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},

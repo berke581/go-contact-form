@@ -8,7 +8,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-playground/validator/v10"
 
-	"github.com/berke581/go-contact-form/email"
+	"github.com/berke581/go-contact-form/pkg/email"
 )
 
 func Routes() *chi.Mux {
